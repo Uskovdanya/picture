@@ -12,7 +12,7 @@ const modals = () => {
       item.addEventListener('click', (e) => {
         gift.style.marginRight = `${calcScroll()}px`;
         
-        if (e.target) {
+        if(e.target) {
           e.preventDefault();
         }
         btnPressed = true;  // пользователь нажал на какую то кнопку
@@ -100,14 +100,13 @@ const modals = () => {
   function openByScroll(selector) {
     window.addEventListener('scroll', () => {
       let scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-
       if (!btnPressed && (window.pageYOffset + document.documentElement.clientHeight >= scrollHeight)) {
         document.querySelector(selector).click(); // как будто на подарок кто то нажал
       }
     });
   }
 
-  bindModal('.button-design', '.popup-design', '.popup-design .popup-close');
+  bindModal('.button-order', '.popup-design', '.popup-design .popup-close');
   bindModal('.button-consultation', '.popup-consultation', '.popup-consultation .popup-close');
   bindModal('.fixed-gift', '.popup-gift', '.popup-gift .popup-close', true);
   openByScroll('.fixed-gift');
