@@ -2,6 +2,63 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/js/modules/accordion3.js":
+/*!**************************************!*\
+  !*** ./src/js/modules/accordion3.js ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+const accordion = triggersSelector => {
+  const btns = document.querySelectorAll(triggersSelector);
+  btns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      if (!this.classList.contains('active-style')) {
+        btns.forEach(btn => {
+          btn.classList.remove('active-style');
+          btn.nextElementSibling.classList.remove('active-content');
+        });
+      }
+
+      this.classList.toggle('active-style');
+      this.nextElementSibling.classList.toggle('active-content');
+    });
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (accordion);
+
+/***/ }),
+
+/***/ "./src/js/modules/burger.js":
+/*!**********************************!*\
+  !*** ./src/js/modules/burger.js ***!
+  \**********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+const burger = (menuSelector, burgerSelector) => {
+  const menuElem = document.querySelector(menuSelector),
+        burgerElem = document.querySelector(burgerSelector);
+  menuElem.style.display = 'none';
+  burgerElem.addEventListener('click', () => {
+    if (menuElem.style.display == 'none' && window.screen.availWidth < 993) {
+      menuElem.style.display = 'block';
+    } else {
+      menuElem.style.display = 'none';
+    }
+  });
+  window.addEventListener('resize', () => {
+    if (window.screen.availWidth > 992) {
+      menuElem.style.display = 'none';
+    }
+  }); // при перевороте экрана меню схлопывается
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (burger);
+
+/***/ }),
+
 /***/ "./src/js/modules/calc.js":
 /*!********************************!*\
   !*** ./src/js/modules/calc.js ***!
@@ -61,6 +118,76 @@ const checkTextInputs = selector => {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (checkTextInputs);
+
+/***/ }),
+
+/***/ "./src/js/modules/drop.js":
+/*!********************************!*\
+  !*** ./src/js/modules/drop.js ***!
+  \********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+const drop = () => {
+  //drag*
+  //dragend*
+  //dragenter- объект над dropArea
+  //dragexit*
+  // dragleave объект перетащили за пределы dropArea
+  //dragover объект зависает над dropArea 
+  //dragstart*
+  //drop объект отправлен в dropArea
+  //* срабатывают при перетаскивании элементов на странице
+  const fileInputs = document.querySelectorAll('[name="upload"]');
+  ['dragenter', 'dragleave', 'dragover', 'drop'].forEach(eventName => {
+    fileInputs.forEach(input => {
+      input.addEventListener(eventName, preventDafaults, false);
+    });
+  });
+
+  function preventDafaults(e) {
+    e.preventDafaults();
+    e.stopPropagation();
+  }
+
+  function highlight(item) {
+    item.closest('.file_upload').style.border = "5px solid yellow";
+    item.closest('.file_upload').style.backgroundColor = "rgba(0, 0, 0, .7)";
+  }
+
+  function unhighlight(item) {
+    item.closest('.file_upload').style.border = "none";
+
+    if (item.closest('.calc_form')) {
+      item.closest('.file_upload').style.backgroundColor = "#fff";
+    } else {
+      item.closest('.file_upload').style.backgroundColor = "#ededed";
+    }
+  }
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    fileInputs.forEach(input => {
+      input.addEventListener(eventName, () => highlight(input), false);
+    });
+  });
+  ['dragleave', 'drop'].forEach(eventName => {
+    fileInputs.forEach(input => {
+      input.addEventListener(eventName, () => unhighlight(input), false);
+    });
+  });
+  fileInputs.forEach(input => {
+    input.addEventListener('drop', e => {
+      input.files = e.dataTransfer.files;
+      let dots;
+      const arr = input.files[0].name.split('.');
+      arr[0].length > 6 ? dots = "..." : dots = '.';
+      const name = arr[0].substring(0, 6) + dots + arr[1];
+      input.previousElementSibling.textContent = name;
+    });
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (drop);
 
 /***/ }),
 
@@ -420,6 +547,105 @@ const pictureSize = imgSelector => {
 
 /***/ }),
 
+/***/ "./src/js/modules/scrolling.js":
+/*!*************************************!*\
+  !*** ./src/js/modules/scrolling.js ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+const scrolling = upSelector => {
+  const upElem = document.querySelector(upSelector);
+  window.addEventListener('scroll', () => {
+    if (document.documentElement.scrollTop > 1650) {
+      upElem.classList.add('animated', 'fadeIn');
+      upElem.classList.remove('fadeOut');
+    } else {
+      upElem.classList.add('fadeOut');
+      upElem.classList.remove('fadeIn');
+    }
+  }); //Скролл с RecvestAnimationFrame
+
+  let links = document.querySelectorAll('[href^="#"]'),
+      speed = 0.2;
+  links.forEach(link => {
+    if (link.getAttribute('href') != "#") {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        let heighTop = document.documentElement.scrollTop,
+            hash = this.hash,
+            toBlock = document.querySelector(hash).getBoundingClientRect().top,
+            start = null;
+        requestAnimationFrame(step);
+
+        function step(time) {
+          if (start === null) {
+            start = time;
+          }
+
+          let progress = time - start,
+              r = toBlock < 0 ? Math.max(heighTop - progress / speed, heighTop + toBlock) : Math.min(heighTop + progress / speed, heighTop + toBlock);
+          document.documentElement.scrollTo(0, r);
+
+          if (r != heighTop + toBlock) {
+            requestAnimationFrame(step);
+          } else {
+            location.hash = hash;
+          }
+        }
+      });
+    }
+  }); // Скролл на чистом JS
+  //const element = document.documentElement,
+  //    body = document.body;
+  //const calcScroll = () => {
+  //  upElem.addEventListener('click', function(event) { 
+  //    let scrollTop = Math.round(body.scrollTop || element.scrollTop);
+  //    if (this.hash !== '') {
+  //      event.preventDefault();
+  //      let hashElement = document.querySelector(this.hash),
+  //              hashElementTop = 0;
+  //      while (hashElement.offsetParent) {
+  //        hashElementTop += hashElement.offsetTop;
+  //        hashElement = hashElement.offsetParent;
+  //      }
+  //      hashElementTop = Math.round(hashElementTop);
+  //      smoothScroll(scrollTop, hashElementTop, this.hash);
+  //    }
+  //  });
+  //};
+  //const smoothScroll = (from, to, hash) => {
+  //  let timeInterval = 1,
+  //    prevScrollTop,
+  //    speed;
+  //  if (to > from) {
+  //    speed = 30;
+  //  } else {
+  //    speed = -30;
+  //  }
+  //  let move = setInterval(function() {
+  //    let scrollTop = Math.round(body.scrollTop || element.scrollTop);
+  //    if (
+  //      prevScrollTop === scrollTop ||
+  //      (to > from && scrollTop >= to) ||
+  //      (to < from && scrollTop <= to) 
+  //    ) {
+  //      clearInterval(move);
+  //      history.replaceState(history.state, document.title, location.href.replace(/#.*$/g, '') + hash);
+  //    } else {
+  //      body.scrollTop += speed;
+  //      element.scrollTop += speed;
+  //      prevScrollTop = scrollTop;
+  //    }
+  //  }, timeInterval);
+  //};
+  //calcScroll();
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (scrolling);
+
+/***/ }),
+
 /***/ "./src/js/modules/showMoreStyles.js":
 /*!******************************************!*\
   !*** ./src/js/modules/showMoreStyles.js ***!
@@ -665,6 +891,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_calc__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/calc */ "./src/js/modules/calc.js");
 /* harmony import */ var _modules_optimizedFilter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/optimizedFilter */ "./src/js/modules/optimizedFilter.js");
 /* harmony import */ var _modules_pictureSize__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/pictureSize */ "./src/js/modules/pictureSize.js");
+/* harmony import */ var _modules_accordion3__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/accordion3 */ "./src/js/modules/accordion3.js");
+/* harmony import */ var _modules_burger__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/burger */ "./src/js/modules/burger.js");
+/* harmony import */ var _modules_scrolling__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/scrolling */ "./src/js/modules/scrolling.js");
+/* harmony import */ var _modules_drop__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./modules/drop */ "./src/js/modules/drop.js");
+
+
+
+
 
 
 
@@ -687,7 +921,13 @@ window.addEventListener('DOMContentLoaded', () => {
   (0,_modules_showMoreStyles__WEBPACK_IMPORTED_MODULE_5__["default"])('.button-styles', '#styles .row');
   (0,_modules_calc__WEBPACK_IMPORTED_MODULE_6__["default"])('#size', '#material', '#options', '.promocode', '.calc-price');
   (0,_modules_optimizedFilter__WEBPACK_IMPORTED_MODULE_7__["default"])();
-  (0,_modules_pictureSize__WEBPACK_IMPORTED_MODULE_8__["default"])('.sizes-block');
+  (0,_modules_pictureSize__WEBPACK_IMPORTED_MODULE_8__["default"])('.sizes-block'); //accordion('.accordion-heading', '.accordion-block');
+  //accordion ('.accordion-heading');
+
+  (0,_modules_accordion3__WEBPACK_IMPORTED_MODULE_9__["default"])('.accordion-heading');
+  (0,_modules_burger__WEBPACK_IMPORTED_MODULE_10__["default"])('.burger-menu', '.burger');
+  (0,_modules_scrolling__WEBPACK_IMPORTED_MODULE_11__["default"])('.pageup');
+  (0,_modules_drop__WEBPACK_IMPORTED_MODULE_12__["default"])();
 });
 }();
 /******/ })()

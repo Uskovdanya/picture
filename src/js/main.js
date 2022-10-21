@@ -7,6 +7,10 @@ import showMoreStyles from './modules/showMoreStyles';
 import calc from './modules/calc';
 import filter from './modules/optimizedFilter';
 import pictureSize from './modules/pictureSize';
+import accordion from './modules/accordion3';
+import burger from './modules/burger';
+import scrolling from './modules/scrolling';
+import drop from './modules/drop';
 
 window.addEventListener('DOMContentLoaded', () => {
   "use strict";
@@ -22,4 +26,10 @@ window.addEventListener('DOMContentLoaded', () => {
   calc('#size', '#material', '#options', '.promocode', '.calc-price');
   filter();
   pictureSize('.sizes-block');
+  //accordion('.accordion-heading', '.accordion-block');
+  //accordion ('.accordion-heading');
+  accordion ('.accordion-heading');
+  burger('.burger-menu', '.burger');
+  scrolling('.pageup');
+  drop();
 });
